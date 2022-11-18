@@ -30,7 +30,7 @@
                 <!-- Search -->
                 <div class="input-group mb-3">
                     <!-- Searchbar -->
-                    <input id="enter-city" type="text" class="form-control" placeholder="City Name"
+                    <input id="search-city" type="text" class="form-control" placeholder="City Name"
                         aria-label="Enter a city name">
                     <div class="input-group-append">
                         <!-- Search button with icon -->
@@ -49,14 +49,14 @@
             <div class="col-lg-9">
                 <!-- Current conditions -->
                 <div class="row mr-0">
-                    <div class="col-lg-11 card m-3 d-none" id="today-weather">
+                    <div class="col-lg-11 card m-3 d-none" id="current-weather">
                         <div class="card-body">
                             <h3 id="city-name" class="city-name align-middle"></h3>
-                            <img id="current-pic" alt="">
+                            <img id="current-img" alt="">
                             <p id="temperature"></p>
                             <p id="humidity"></p>
                             <p id="wind-speed"></p>
-                            <p id="UV-index"></p>
+                            <p id="uv-index"></p>
                         </div>
                     </div>
                 </div>
@@ -69,15 +69,15 @@
                 <!-- 5 day forecast results -->
                 <div class="row">
                     <!-- Day 1 forecast -->
-                    <div class="col-md-2 forecast bg-primary text-white m-2 rounded"></div>
+                    <div class="forecast col-md-2 bg-primary text-white m-2 rounded"></div>
                     <!-- Day 2 forecast -->
-                    <div class="col-md-2 forecast bg-primary text-white m-2 rounded"></div>
+                    <div class="forecast col-md-2 bg-primary text-white m-2 rounded"></div>
                     <!-- Day 3 forecast -->
-                    <div class="col-md-2 forecast bg-primary text-white m-2 rounded"></div>
+                    <div class="forecast col-md-2 bg-primary text-white m-2 rounded"></div>
                     <!-- Day 4 forecast -->
-                    <div class="col-md-2 forecast bg-primary text-white m-2 rounded"></div>
+                    <div class="forecast col-md-2 bg-primary text-white m-2 rounded"></div>
                     <!-- Day 5 forecast -->
-                    <div class="col-md-2 forecast bg-primary text-white m-2 rounded"></div>
+                    <div class="forecast col-md-2 bg-primary text-white m-2 rounded"></div>
                 </div>
             </div>
         </div>
@@ -86,6 +86,8 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <!-- Day.js -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
     <!-- Local JS-->
     <script src="./assets/js/script.js"></script>
 </body>
