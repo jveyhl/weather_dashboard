@@ -48,14 +48,13 @@ $(document).ready(() => {
         );
 
         // Set current temperture
-        currentTempEl[0].innerHTML = `Temperature: ${
-          tempConvert(data.main.temp).f
-        } &#176F`;
+        currentTempEl[0].innerHTML = `Temperature: ${tempConvert(data.main.temp).f} &#176F`;
+
         // Set current wind speed
+
         currentWindEl[0].innerHTML = `Wind Speed: ${data.wind.speed} MPH`;
         // Set current humidity
         currentHumEl[0].innerHTML = `Humidity: ${data.main.humidity}%`;
-
 
         // 5 day forecast for the selected city
         // Get the id of the selected city
@@ -72,27 +71,54 @@ $(document).ready(() => {
             // Make 5 day forecast <h3> element visible
             fiveDayEl[0].classList.remove("d-none");
 
-            // Generate the 5 day forecast
-
             // Store the updated forecastDate through each iteration of the loop
             let forecastDate;
-
+            console.log(data.list);
+            // Get forecast data and inject to HTML
             for (let i = 0; i < forecastEls.length; i++) {
-              forecastEls[i].innerHTML = "";
+              // Index for weather forecast data
+              const forecastIndex = i * 8 + 4;
+              
               // Add one day to the current date
               forecastDate = dayjs()
                 .add(i + 1, "day")
                 .toString();
-              // Format the date  
-              let formattedForecastDate = dayjs(forecastDate).format("(D/M/YYYY)");
-              
+
+              // Format the date
+              let formattedForecastDate =
+                dayjs(forecastDate).format("(D/M/YYYY)");
+
               // Make a forecastDate element and append to the corresponding Day # forecast
               const forecastDateEl = document.createElement("p");
               forecastDateEl.setAttribute("class", "mt-3 mb-0 forecast-date");
               forecastDateEl.innerHTML = formattedForecastDate;
               forecastEls[i].append(forecastDateEl);
 
-              // Make a forecastWeather element 
+              // Make an element to hold the forecast weather icon
+              const forecastIconEl = document.createElement("img");
+
+              // Get the forecast weather icon value
+              let forecastWeatherIcon = data.list[forecastIndex].weather[0].icon;
+
+              // Set the <img> elements src attribute to get the icon image
+              forecastIconEl.setAttribute(
+                "src",
+                `https://openweathermap.org/img/wn/${forecastWeatherIcon}@2x.png`
+              );
+
+              // Append forecast weather icon
+              forecastEls[i].append(forecastIconEl);
+
+              // Make forecast temperature element and append
+              const forecastTempEl = document.createElement("p");
+              forecastTempEl.innerHTML = `Temperature: ${tempConvert(data.list[forecastIndex].main.temp).f} &#176F`;
+              forecastEls[i].append(forecastTempEl);
+
+              // Make forecast humidity element and append
+              const forecastHumidityEl = document.createElement("p");
+              forecastHumidityEl.innerHTML = `Humidity: ${data.list[forecastIndex].main.humidity}%`;
+              forecastEls[i].append(forecastHumidityEl);
+
             }
           });
       });
