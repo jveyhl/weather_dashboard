@@ -146,8 +146,31 @@ $(document).ready(() => {
 
   // Retrieve data from localStorage
   searchBtnEl.on("click", function () {
+    // Get city value currently in searchbar
     const query = searchCityEl.val();
+
+    // Get weather for city value
     getWeather(query);
+
+    // Add city value to searchHistory array
     searchHistory.push(query);
+
+    // Add array to localStorage
+    localStorage.setItem("query", JSON.stringify(searchHistory));
+
+    // Generate search history in HTML
+    // ADD CALL TO FUNCTION HERE *****************************************************
   });
+
+  // Clear history
+  clearBtnEl.on("click", function () {
+    localStorage.clear();
+    searchHistory = [];
+    // Generate search history in HTML
+    // ADD CALL TO FUNCTION HERE *****************************************************
+  });
+
+  // 
+
+  // END
 });
