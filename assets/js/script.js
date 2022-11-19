@@ -159,7 +159,7 @@ $(document).ready(() => {
     localStorage.setItem("query", JSON.stringify(searchHistory));
 
     // Generate search history in HTML
-    // ADD CALL TO FUNCTION HERE *****************************************************
+    genSeachHistory();
   });
 
   // Clear history
@@ -167,10 +167,34 @@ $(document).ready(() => {
     localStorage.clear();
     searchHistory = [];
     // Generate search history in HTML
-    // ADD CALL TO FUNCTION HERE *****************************************************
+    genSeachHistory();
   });
 
-  // 
+  // Generate seach history in HTML
+  function genSeachHistory() {
+    // Clear/reset search history
+    historyEl.trigger("reset");
+
+    // Make seach history items
+    for (let i = 0; i < searchHistory.length; i++) {
+      // Make HTML element
+      const historyItem = $("<input>");
+
+      // Set attributes for the element
+      historyItem.attr("type", "text");
+      historyItem.attr("readonly", true);
+      historyItem.attr("class", "form-control d-block bg-white");
+      historyItem.attr("value", searchHistory[i]);
+
+      // Load weather information for selected history item
+      historyItem.on("click", function () {
+        getWeather(historyItem.val());
+      });
+
+      // Append history item
+      historyEl.append(historyItem);
+    }
+  }
 
   // END
 });
