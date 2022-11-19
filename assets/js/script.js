@@ -21,6 +21,7 @@ $(document).ready(() => {
   // APIKey
   const APIKey = "3ddf8b774ef8c410e4f09e55de10f6b4";
 
+  // Send city query to openweather API and retrieve weather data
   function getWeather(city) {
     // Create query url for current weather
     let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APIKey}`;
@@ -48,7 +49,9 @@ $(document).ready(() => {
         );
 
         // Set current temperture
-        currentTempEl[0].innerHTML = `Temperature: ${tempConvert(data.main.temp).f} &#176F`;
+        currentTempEl[0].innerHTML = `Temperature: ${
+          tempConvert(data.main.temp).f
+        } &#176F`;
 
         // Set current wind speed
 
@@ -73,12 +76,16 @@ $(document).ready(() => {
 
             // Store the updated forecastDate through each iteration of the loop
             let forecastDate;
-            console.log(data.list);
+
             // Get forecast data and inject to HTML
             for (let i = 0; i < forecastEls.length; i++) {
+              // Clear/reset 5 day forecast
+              forecastEls[i].innerHTML = "";
+
               // Index for weather forecast data
+              // This pattern gets data for the same time on each of the 5 days
               const forecastIndex = i * 8 + 4;
-              
+
               // Add one day to the current date
               forecastDate = dayjs()
                 .add(i + 1, "day")
@@ -98,7 +105,8 @@ $(document).ready(() => {
               const forecastIconEl = document.createElement("img");
 
               // Get the forecast weather icon value
-              let forecastWeatherIcon = data.list[forecastIndex].weather[0].icon;
+              let forecastWeatherIcon =
+                data.list[forecastIndex].weather[0].icon;
 
               // Set the <img> elements src attribute to get the icon image
               forecastIconEl.setAttribute(
@@ -111,14 +119,15 @@ $(document).ready(() => {
 
               // Make forecast temperature element and append
               const forecastTempEl = document.createElement("p");
-              forecastTempEl.innerHTML = `Temperature: ${tempConvert(data.list[forecastIndex].main.temp).f} &#176F`;
+              forecastTempEl.innerHTML = `Temperature: ${
+                tempConvert(data.list[forecastIndex].main.temp).f
+              } &#176F`;
               forecastEls[i].append(forecastTempEl);
 
               // Make forecast humidity element and append
               const forecastHumidityEl = document.createElement("p");
               forecastHumidityEl.innerHTML = `Humidity: ${data.list[forecastIndex].main.humidity}%`;
               forecastEls[i].append(forecastHumidityEl);
-
             }
           });
       });
@@ -135,5 +144,10 @@ $(document).ready(() => {
     return allTemps;
   }
 
-  getWeather("montreal");
+  // Retrieve data from localStorage
+  searchBtnEl.on("click", function () {
+    const query = searchCityEl.val();
+    getWeather(query);
+    searchHistory.push(query);
+  });
 });
