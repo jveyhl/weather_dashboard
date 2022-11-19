@@ -1,75 +1,113 @@
 $(document).ready(() => {
+  // Search/History Elements
+  const searchCityEl = $("#search-city");
+  const searchBtnEl = $("#search-button");
+  const clearBtnEl = $("#clear-history");
+  const historyEl = $("#history");
 
-    // Search/History Elements
-    const searchCityEl = $("#search-city");
-    const searchBtnEl = $("#search-button");
-    const clearBtnEl = $("#clear-history");
-    const historyEl = $("#history");
+  // Display Results Elements
+  var currentWeatherEl = $("#current-weather");
+  const cityNameEl = $("#city-name");
+  const currentIconEl = $("#current-icon");
+  const currentTempEl = $("#temperature");
+  const currentWindEl = $("#wind-speed");
+  const currentHumEl = $("#humidity");
+  var fiveDayEl = $("#fiveday-header");
+  const forecastEls = $(".forecast");
 
-    // Display Results Elements
-    var currentWeatherEl = $("#current-weather");
-    const cityNameEl = $("#city-name");
-    const currentIconEl = $("#current-icon");
-    const currentTempEl = $("#temperature");
-    const currentWindEl = $("#wind-speed");
-    const currentHumEl = $("#humidity");
-    const currentUvEl = $("#uv-index");
-    var fiveDayEl = $("#fiveday-header");
+  // Get search history from localStorage or empty array
+  var searchHistory = JSON.parse(localStorage.getItem("search")) || [];
 
-    // Get search history from localStorage or empty array
-    var searchHistory = JSON.parse(localStorage.getItem("search")) || [];
+  // APIKey
+  const APIKey = "3ddf8b774ef8c410e4f09e55de10f6b4";
 
-    // APIKey
-    const APIKey = "3ddf8b774ef8c410e4f09e55de10f6b4";
+  function getWeather(city) {
+    // Create query url for current weather
+    let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APIKey}`;
 
-    function getWeather(city) {
-        // Create query url
-        let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APIKey}`;
+    fetch(queryURL)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        // Make current conditions element visible
+        currentWeatherEl[0].classList.remove("d-none");
 
-        fetch(queryURL)
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
+        // Create date/time to place next to city name in current conditions
+        const currentDate = dayjs().format("(D/M/YYYY)");
 
-                // Make current conditions element visible
-                currentWeatherEl[0].classList.remove("d-none")
+        // Display city name and current date im current conditions
+        cityNameEl[0].innerHTML = `${data.name} ${currentDate}`;
 
-                // Create date/time to place next to city name in current conditions
-                const currentDate = dayjs().format("DD MMMM YYYY");
+        // Get the weather icon value
+        let weatherIcon = data.weather[0].icon;
+        // Set the <img> elements src attribute to get the icon image
+        currentIconEl[0].setAttribute(
+          "src",
+          `https://openweathermap.org/img/wn/${weatherIcon}.png`
+        );
 
-                // Display city name and current date im current conditions
-                cityNameEl[0].innerHTML = `${data.name} ${currentDate}`;
+        // Set current temperture
+        currentTempEl[0].innerHTML = `Temperature: ${
+          tempConvert(data.main.temp).f
+        } &#176F`;
+        // Set current wind speed
+        currentWindEl[0].innerHTML = `Wind Speed: ${data.wind.speed} MPH`;
+        // Set current humidity
+        currentHumEl[0].innerHTML = `Humidity: ${data.main.humidity}%`;
 
-                // Get the weather icon value
-                let weatherIcon = data.weather[0].icon;
-                // Set the <img> elements src attribute to get the icon image
-                currentIconEl[0].setAttribute("src", `https://openweathermap.org/img/wn/${weatherIcon}.png`);
 
-                // Set current temperture
-                currentTempEl[0].innerHTML = `Temperature: ${tempConvert(data.main.temp).f} &#176F`;
-                // Set current humidity
-                currentHumEl[0].innerHTML = `Humidity: ${data.main.humidity}%`;
-                // Set current wind speed
-                currentWindEl[0].innerHTML = `Wind Speed: ${data.wind.speed} MPH`;
+        // 5 day forecast for the selected city
+        // Get the id of the selected city
+        let cityId = data.id;
 
-                console.log();
-            })
-            ;
+        // Create query url for the 5 day forecast
+        let forecastQueryURL = `https://api.openweathermap.org/data/2.5/forecast?id=${cityId}&appid=${APIKey}`;
 
-        //console.log("from getWeather");
-    }
+        fetch(forecastQueryURL)
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (data) {
+            // Make 5 day forecast <h3> element visible
+            fiveDayEl[0].classList.remove("d-none");
 
-    // Convert kelvin to celsius
-    function tempConvert(temp) {
-        // Create temperature object
-        const allTemps = {
-            k: temp,
-            c: (temp - 273.15).toFixed(1),
-            f: (1.8 * (temp - 273.15) + 32).toFixed(1)
-        }
-        return allTemps;
-    }
+            // Generate the 5 day forecast
 
-    getWeather("montreal");
+            // Store the updated forecastDate through each iteration of the loop
+            let forecastDate;
+
+            for (let i = 0; i < forecastEls.length; i++) {
+              forecastEls[i].innerHTML = "";
+              // Add one day to the current date
+              forecastDate = dayjs()
+                .add(i + 1, "day")
+                .toString();
+              // Format the date  
+              let formattedForecastDate = dayjs(forecastDate).format("(D/M/YYYY)");
+              
+              // Make a forecastDate element and append to the corresponding Day # forecast
+              const forecastDateEl = document.createElement("p");
+              forecastDateEl.setAttribute("class", "mt-3 mb-0 forecast-date");
+              forecastDateEl.innerHTML = formattedForecastDate;
+              forecastEls[i].append(forecastDateEl);
+
+              // Make a forecastWeather element 
+            }
+          });
+      });
+  }
+
+  // Convert kelvin to celsius/fahrenheit
+  function tempConvert(temp) {
+    // Create temperature object
+    const allTemps = {
+      k: temp,
+      c: (temp - 273.15).toFixed(1),
+      f: (1.8 * (temp - 273.15) + 32).toFixed(1),
+    };
+    return allTemps;
+  }
+
+  getWeather("montreal");
 });
