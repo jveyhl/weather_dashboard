@@ -33,32 +33,32 @@ $(document).ready(() => {
       .then(function (data) {
         // Make current conditions element visible
         currentWeatherEl.removeClass("d-none");
-       
 
         // Create date/time to place next to city name in current conditions
         const currentDate = dayjs().format("(D/M/YYYY)");
 
         // Display city name and current date im current conditions
-        cityNameEl[0].innerHTML = `${data.name} ${currentDate}`;
+        cityNameEl.html(`${data.name} ${currentDate}`);
 
         // Get the weather icon value
         let weatherIcon = data.weather[0].icon;
-        // Set the <img> elements src attribute to get the icon image
-        currentIconEl[0].setAttribute(
+
+        // Set the <img> elements src attribute to get the current weather icon image
+        currentIconEl.attr(
           "src",
           `https://openweathermap.org/img/wn/${weatherIcon}.png`
         );
 
         // Set current temperture
-        currentTempEl[0].innerHTML = `Temperature: ${
-          tempConvert(data.main.temp).f
-        } &#176F`;
+        currentTempEl.html(
+          `Temperature: ${tempConvert(data.main.temp).f} &#176F`
+        );
 
         // Set current wind speed
+        currentWindEl.html(`Wind Speed: ${data.wind.speed} MPH`);
 
-        currentWindEl[0].innerHTML = `Wind Speed: ${data.wind.speed} MPH`;
         // Set current humidity
-        currentHumEl[0].innerHTML = `Humidity: ${data.main.humidity}%`;
+        currentHumEl.html(`Humidity: ${data.main.humidity}%`);
 
         // 5 day forecast for the selected city
         // Get the id of the selected city
@@ -73,7 +73,7 @@ $(document).ready(() => {
           })
           .then(function (data) {
             // Make 5 day forecast <h3> element visible
-            fiveDayEl[0].classList.remove("d-none");
+            fiveDayEl.removeClass("d-none");
 
             // Store the updated forecastDate through each iteration of the loop
             let forecastDate;
@@ -101,6 +101,10 @@ $(document).ready(() => {
               forecastDateEl.setAttribute("class", "mt-3 mb-0 forecast-date");
               forecastDateEl.innerHTML = formattedForecastDate;
               forecastEls[i].append(forecastDateEl);
+              // const forecastDateEl = $("<p>");
+              //forecastDateEl.attr("class", "mt-3 mb-0 forecast-date");
+              //forecastDateEl.html(formattedForecastDate);
+              // forecastEls[i].append(forecastDateEl);
 
               // Make an element to hold the forecast weather icon
               const forecastIconEl = document.createElement("img");
