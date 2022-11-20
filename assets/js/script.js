@@ -16,7 +16,7 @@ $(document).ready(() => {
   const forecastEls = $(".forecast");
 
   // Get search history from localStorage or empty array
-  var searchHistory = JSON.parse(localStorage.getItem("search")) || [];
+  var searchHistory = JSON.parse(localStorage.getItem("query")) || [];
 
   // APIKey
   const APIKey = "3ddf8b774ef8c410e4f09e55de10f6b4";
@@ -32,7 +32,8 @@ $(document).ready(() => {
       })
       .then(function (data) {
         // Make current conditions element visible
-        currentWeatherEl[0].classList.remove("d-none");
+        currentWeatherEl.removeClass("d-none");
+       
 
         // Create date/time to place next to city name in current conditions
         const currentDate = dayjs().format("(D/M/YYYY)");
@@ -168,12 +169,14 @@ $(document).ready(() => {
     searchHistory = [];
     // Generate search history in HTML
     genSeachHistory();
+    // Clear all weather data presented on the page
+    location.reload();
   });
 
   // Generate seach history in HTML
   function genSeachHistory() {
     // Clear/reset search history
-    historyEl.trigger("reset");
+    historyEl.html("");
 
     // Make seach history items
     for (let i = 0; i < searchHistory.length; i++) {
@@ -196,6 +199,11 @@ $(document).ready(() => {
     }
   }
 
+  // Load search history
+  genSeachHistory();
 
-  // END
+  // Display weather information for last item in search history
+  if (searchHistory.length > 0) {
+    getWeather(searchHistory[searchHistory.length - 1]);
+  }
 });
